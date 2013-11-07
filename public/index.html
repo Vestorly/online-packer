@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="shortcut icon" href="../../assets/ico/favicon.png"> -->
+
+    <title>Online Packer</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="javascripts/jquery.js"></script>
+    <script src="javascripts/main.js"></script>
+    <script>
+    $(function(){
+      $('form').submit(function(){
+        var $form = $(this);
+        var $input = $form.find('input[name="url"]');
+        var params = $form.serialize();
+        var url =  $input.prop('disabled', true).val();
+        var client = new XMLHttpRequest();
+        $('#output').html('Initiating...');  
+        client.open('get', '/api/parse?' + params + '&' + Math.random());
+        client.send();
+        client.onprogress = function(evt){          
+          //console.log(evt);
+          //$('#output').html(this.responseText);      
+
+          if(this.responseText.indexOf('Finish!') != -1) {
+            $input.prop('disabled', false);
+          }        
+          if(this.responseText.indexOf('Failed to open URL') != -1) {
+            $input.prop('disabled', false);
+          }        
+        }
+        client.onreadystatechange = function(evt){
+          //console.log(evt);
+          if(client.readyState == 3) {
+            $('#output').html(client.responseText);
+            if(client.responseText.indexOf('Failed to open URL') != -1) {
+              $input.prop('disabled', false);
+            }        
+          }
+        }
+        if($('fieldset').css('display') == 'block') {
+          $('fieldset, #screenshot-div').animate({
+            height: "toggle",
+            opacity: "toggle"
+          });
+        }
+
+        return false;
+      });
+
+      $('#filters').click(function(){
+        $('fieldset').animate({
+          height: "toggle",
+          opacity: "toggle"
+        });
+      });
+
+      // subscribe to stream
+        var source = new EventSource('/stream');
+        source.addEventListener('message', function(e) {
+          console.log(e.data);
+        }, false);
+
+        source.addEventListener('open', function(e) {
+          // Connection was opened.
+          console.log('stream connection open.')
+          console.log(e);
+        }, false);
+
+        source.addEventListener('error', function(e) {
+          if (e.readyState == EventSource.CLOSED) {
+            // Connection was closed.
+            console.log('stream connection closed.')
+          }
+        }, false);
+    })
+    </script>
+  </head>
+
+  <body>
+
+    <!-- Wrap all page content here -->
+    <div id="wrap">
+
+      <!-- Begin page content -->
+      <div class="container">
+        <div class="page-header">
+          <h1>Online Packer</h1>
+        </div>
+        <p class="lead">Enter a page URL, we will pack all the javascript and css into single files.</p>
+        <p>
+          <form id="form" class="form-horizontal" role="form">
+              <div class="row">
+                <div class="col-lg-10">
+              	 <input class="form-control input-lg" type="text" name="url" placeholder="web page URL">
+                </div>
+                   <button type="submit" class="btn btn-lg btn-default" id="go">
+                    <span class="glyphicon glyphicon-chevron-right"></span> Go
+                   </button>
+                   <button type="button" class="btn btn-lg btn-default" id="filters">
+                      <span class="glyphicon glyphicon-filter"></span> Filters
+                    </button>
+              </div>
+
+              
+              <div class="row text-center" id="screenshot-div" style="display:none;">
+                <img class="img-rounded" id="screenshot" width="150" height="150">
+              </div>
+
+<div class="clearfix"></div>
+<fieldset>
+
+<!-- Form Name -->
+<legend>Options</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="outputjs">Output JS File</label>  
+  <div class="col-md-4">
+  <input id="outputjs" name="outputjs" type="text" placeholder="main.js" class="form-control input-md">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="outputcss`">Output CSS File</label>  
+  <div class="col-md-4">
+  <input id="outputcss`" name="outputcss`" type="text" placeholder="main.css" class="form-control input-md">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="base_path">Base path</label>  
+  <div class="col-md-6">
+  <input id="base_path" name="base_path" type="text" placeholder="base path for the assets" class="form-control input-md">
+  <span class="help-block">the base path gets prefixed with all the urls</span>  
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="excludes">Files to exclude</label>  
+  <div class="col-md-6">
+  <input id="excludes" name="excludes" type="text" placeholder="example1.js,example2.js,example3.css" class="form-control input-md">
+  <span class="help-block">comma delimited files to exclude from the packing</span>  
+  </div>
+</div>
+
+</fieldset>
+
+
+
+          </form>
+        </p>
+
+<div class="clearfix"></div>
+        <div class="panel panel-default">
+		  <div class="panel-heading">Output</div>
+		  <div class="panel-body" id="output">
+		    
+		  </div>
+		</div>
+
+
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted credit">Online Packer <a href="http://programmingmind.com">David Ang</a>.</p>
+      </div>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>

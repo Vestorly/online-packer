@@ -1,0 +1,1 @@
+rerun "thin -R app.rb start"
