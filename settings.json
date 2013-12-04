@@ -1,0 +1,7 @@
+{
+	  "uploadsPath" : "../../../../uploads",
+	  "publicPath" : "../../../../../public",
+	  "wwwPath" : "../../../../../../packr",
+	  "tmpPath" : "../../../../../.tmp",
+	  "baseDownloadUrl" : "http://packr.local"     
+}

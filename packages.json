@@ -1,0 +1,7 @@
+{
+  "cheerio" : "0.12.4",
+  "webshot" : "0.7.1",
+  "node-minify" : "0.8.1",
+  "wrench" : "1.5.4",
+  "delivery" : "0.0.3"
+}

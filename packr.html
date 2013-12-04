@@ -1,0 +1,112 @@
+<head>
+  <title>Packr</title>
+</head>
+
+<body>
+  <!-- Wrap all page content here -->
+    <div id="wrap">
+    	{{loginButtons}}
+
+      <!-- Begin page content -->
+      <div class="container">
+
+        <div class="page-header">
+          <h1>Packr</h1>
+        </div>
+        <p class="lead">Enter a page URL, we will pack all the javascript and css into single files.</p>
+        <p>
+        	{{> form}}
+        </p>
+
+		<div class="clearfix"></div>
+    	<div class="panel panel-default">
+	  		<div class="panel-heading">Output</div>
+	  		{{> output}}
+		</div>
+
+       </div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted credit">Online Packer <a href="http://programmingmind.com">David Ang</a>.</p>
+      </div>
+    </div>
+
+</body>
+
+<template name="form">
+
+<form id="form" class="form-horizontal" role="form">
+  <div class="row">
+    <div class="col-lg-10">
+  	 <input class="form-control input-lg" type="text" name="url" placeholder="web page URL">
+    </div>
+       <button type="submit" class="btn btn-lg btn-default" id="go">
+        <span class="glyphicon glyphicon-chevron-right"></span> Go
+       </button>
+       <button type="button" class="btn btn-lg btn-default" id="filters">
+          <span class="glyphicon glyphicon-filter"></span> Filters
+        </button>
+  </div>
+
+  
+  <div class="row text-center" id="screenshot-div" style="display:none;">
+    <img class="img-rounded" id="screenshot" width="150" height="150">
+  </div>
+
+	<div class="clearfix"></div>
+	<fieldset>
+
+	<!-- Form Name -->
+	<legend>Options</legend>
+
+	<!-- Text input-->
+	<div class="form-group">
+	  <label class="col-md-4 control-label" for="outputjs">Output JS File</label>  
+	  <div class="col-md-4">
+	  <input id="outputjs" name="outputjs" type="text" placeholder="main.js" class="form-control input-md">
+	    
+	  </div>
+	</div>
+
+	<!-- Text input-->
+	<div class="form-group">
+	  <label class="col-md-4 control-label" for="outputcss`">Output CSS File</label>  
+	  <div class="col-md-4">
+	  <input id="outputcss`" name="outputcss`" type="text" placeholder="main.css" class="form-control input-md">
+	    
+	  </div>
+	</div>
+
+	<!-- Text input-->
+	<div class="form-group">
+	  <label class="col-md-4 control-label" for="base_path">Base path</label>  
+	  <div class="col-md-6">
+	  <input id="base_path" name="base_path" type="text" placeholder="base path for the assets" class="form-control input-md">
+	  <span class="help-block">the base path gets prefixed with all the urls</span>  
+	  </div>
+	</div>
+
+	<!-- Text input-->
+	<div class="form-group">
+	  <label class="col-md-4 control-label" for="excludes">Files to exclude</label>  
+	  <div class="col-md-6">
+	  <input id="excludes" name="excludes" type="text" placeholder="example1.js,example2.js,example3.css" class="form-control input-md">
+	  <span class="help-block">comma delimited files to exclude from the packing</span>  
+	  </div>
+	</div>
+
+	</fieldset>
+
+</form>	
+</template>
+
+<template name="output">
+	<div class="panel-body" id="output">	
+		{{#each messages}}
+			{{this}} <br/>
+		{{/each}}
+	</div>
+</template>
+
